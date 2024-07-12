@@ -7,3 +7,5 @@ pgo-data.profdata
 
 # MacOS nuisances
 .DS_Store
+
+.vscode
