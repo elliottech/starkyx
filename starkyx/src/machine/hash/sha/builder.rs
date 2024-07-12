@@ -37,6 +37,7 @@ pub mod test_utils {
     use crate::chip::uint::operations::instruction::UintInstructions;
     use crate::chip::{AirParameters, Chip};
     use crate::machine::bytes::builder::BytesBuilder;
+    use crate::machine::hash::HashPureInteger;
     use crate::math::goldilocks::cubic::GoldilocksCubicParameters;
     use crate::math::prelude::*;
     use crate::plonky2::stark::config::{CurtaConfig, CurtaPoseidonGoldilocksConfig};
@@ -68,7 +69,7 @@ pub mod test_utils {
             .into_iter()
             .flat_map(|msg| {
                 num_messages += 1;
-                let padded_msg = S::pad(msg);
+                let padded_msg: Vec<<S as HashPureInteger>::Integer> = S::pad(msg);
                 let num_chunks = padded_msg.len() / 16;
                 end_bits_values.extend_from_slice(&vec![GoldilocksField::ZERO; num_chunks - 1]);
                 end_bits_values.push(GoldilocksField::ONE);

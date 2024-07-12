@@ -15,8 +15,8 @@ timing = ["plonky2/timing"]
 anyhow = { version = "1.0.40", default-features = false }
 itertools = { version = "0.10.0", default-features = false }
 log = { version = "0.4.14", default-features = false }
-plonky2_maybe_rayon = { version = "0.2.0", default-features = false }
-plonky2 = { git = "https://github.com/0xPolygonZero/plonky2.git", tag = "v0.2.0", default-features = false, optional = true }
+plonky2_maybe_rayon = { git = "https://github.com/0xPolygonZero/plonky2.git", rev = "f5a5845bc8572a73dfcf7ee7fb2d76a16d426baa", default-features = false }
+plonky2 = { git = "https://github.com/0xPolygonZero/plonky2.git", rev = "f5a5845bc8572a73dfcf7ee7fb2d76a16d426baa", default-features = false, optional = true }
 num = { version = "0.4", default-features = false }
 rand = "0.8.4"
 serde = { version = "1.0", features = ["derive"] }
@@ -27,7 +27,7 @@ curve25519-dalek = "4"
 env_logger = "0.9.0"
 
 [dev-dependencies]
-plonky2 = { git = "https://github.com/0xPolygonZero/plonky2.git", tag = "v0.2.0", features = [
+plonky2 = { git = "https://github.com/0xPolygonZero/plonky2.git", rev = "f5a5845bc8572a73dfcf7ee7fb2d76a16d426baa", features = [
     "gate_testing",
 ] }
 env_logger = { version = "0.9.0", default-features = false }
