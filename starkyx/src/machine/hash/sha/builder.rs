@@ -172,8 +172,10 @@ pub mod test_utils {
 
         let mut pw = PartialWitness::new();
 
-        pw.set_target_arr(&public_input, &public);
-        stark.set_proof_target(&mut pw, &proof_target, proof);
+        pw.set_target_arr(&public_input, &public).unwrap();
+        stark
+            .set_proof_target(&mut pw, &proof_target, proof)
+            .unwrap();
 
         let rec_proof = timed!(
             timing,

@@ -219,7 +219,7 @@ pub(crate) mod tests {
         // Set public inputs.
         let public_input_targets = builder.add_virtual_targets(public_inputs.len());
         for (&pi_t, &pi) in public_input_targets.iter().zip(public_inputs.iter()) {
-            pw.set_target(pi_t, pi);
+            pw.set_target(pi_t, pi).unwrap();
         }
         builder.verify_stark_proof(&config, &stark, &virtual_proof, &public_input_targets);
 

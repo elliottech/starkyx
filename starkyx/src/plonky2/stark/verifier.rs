@@ -453,7 +453,8 @@ pub fn set_air_proof_target<F, C: CurtaConfig<D, F = F>, W, const D: usize>(
     witness: &mut W,
     proof_target: &AirProofTarget<D>,
     proof: &AirProof<F, C, D>,
-) where
+) -> Result<()>
+where
     F: RichField + Extendable<D>,
     C::Hasher: AlgebraicHasher<F>,
     W: WitnessWrite<F>,
@@ -463,34 +464,37 @@ pub fn set_air_proof_target<F, C: CurtaConfig<D, F = F>, W, const D: usize>(
         .iter()
         .zip_eq(proof_target.trace_caps.iter())
     {
-        witness.set_cap_target(target_cap, cap);
+        witness.set_cap_target(target_cap, cap)?;
     }
-    witness.set_cap_target(&proof_target.quotient_polys_cap, &proof.quotient_polys_cap);
+    witness.set_cap_target(&proof_target.quotient_polys_cap, &proof.quotient_polys_cap)?;
 
     witness.set_fri_openings(
         &proof_target.openings.to_fri_openings(),
         &proof.openings.to_fri_openings(),
-    );
+    )?;
 
-    set_fri_proof_target(witness, &proof_target.opening_proof, &proof.opening_proof);
+    set_fri_proof_target(witness, &proof_target.opening_proof, &proof.opening_proof)
 }
 
 pub fn set_stark_proof_target<F, C: CurtaConfig<D, F = F>, W, const D: usize>(
     witness: &mut W,
     proof_target: &StarkProofTarget<D>,
     proof: &StarkProof<F, C, D>,
-) where
+) -> Result<()>
+where
     F: RichField + Extendable<D>,
     C::Hasher: AlgebraicHasher<F>,
     W: WitnessWrite<F>,
 {
-    set_air_proof_target(witness, &proof_target.air_proof, &proof.air_proof);
+    set_air_proof_target(witness, &proof_target.air_proof, &proof.air_proof)?;
 
     for (target, value) in proof_target
         .global_values
         .iter()
         .zip_eq(proof.global_values.iter())
     {
-        witness.set_target(*target, *value);
+        witness.set_target(*target, *value)?;
     }
+
+    Ok(())
 }

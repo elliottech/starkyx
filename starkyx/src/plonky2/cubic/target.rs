@@ -1,5 +1,6 @@
 use core::ops::Range;
 
+use anyhow::Result;
 use plonky2::hash::hash_types::RichField;
 use plonky2::iop::generator::GeneratedValues;
 use plonky2::iop::target::Target;
@@ -21,7 +22,11 @@ impl CubicElement<Target> {
         CubicElement(witness.get_targets(&self.0).try_into().unwrap())
     }
 
-    pub fn set<F: RichField>(&self, value: &CubicElement<F>, out_buffer: &mut GeneratedValues<F>) {
-        out_buffer.set_target_arr(&self.0, &value.0);
+    pub fn set<F: RichField>(
+        &self,
+        value: &CubicElement<F>,
+        out_buffer: &mut GeneratedValues<F>,
+    ) -> Result<()> {
+        out_buffer.set_target_arr(&self.0, &value.0)
     }
 }

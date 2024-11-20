@@ -1,3 +1,4 @@
+use anyhow::Result;
 use log::{log, Level};
 use plonky2::field::extension::Extendable;
 use plonky2::hash::hash_types::RichField;
@@ -60,7 +61,11 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D> for Wat
         unimplemented!()
     }
 
-    fn run_once(&self, witness: &PartitionWitness<F>, _out_buffer: &mut GeneratedValues<F>) {
+    fn run_once(
+        &self,
+        witness: &PartitionWitness<F>,
+        _out_buffer: &mut GeneratedValues<F>,
+    ) -> Result<()> {
         let values: Vec<u64> = self
             .targets
             .iter()
@@ -72,5 +77,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D> for Wat
             format!("[Watch] {}: {:?}", self.log, values)
         };
         log!(Level::Info, "{}", formatted_log);
+
+        Ok(())
     }
 }
