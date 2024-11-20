@@ -362,15 +362,15 @@ where
         witness: &mut W,
         proof_tagret: &StarkProofTarget<D>,
         proof: StarkProof<L::Field, C, D>,
-    ) {
+    ) -> Result<()> {
         let StarkProofTarget {
             air_proof,
             global_values,
         } = proof_tagret;
 
-        set_air_proof_target(witness, air_proof, &proof.air_proof);
+        set_air_proof_target(witness, air_proof, &proof.air_proof)?;
 
-        witness.set_target_arr(global_values, &proof.global_values);
+        witness.set_target_arr(global_values, &proof.global_values)
     }
 }
 
@@ -466,8 +466,10 @@ mod tests {
 
         let mut pw = PartialWitness::new();
 
-        pw.set_target_arr(&public_input, &public);
-        stark.set_proof_target(&mut pw, &proof_target, proof);
+        pw.set_target_arr(&public_input, &public).unwrap();
+        stark
+            .set_proof_target(&mut pw, &proof_target, proof)
+            .unwrap();
 
         let rec_proof = data.prove(pw).unwrap();
         data.verify(rec_proof).unwrap();

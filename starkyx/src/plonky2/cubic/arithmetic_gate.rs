@@ -1,5 +1,6 @@
 use core::ops::Range;
 
+use anyhow::Result;
 use plonky2::field::extension::Extendable;
 use plonky2::gates::gate::Gate;
 use plonky2::gates::util::StridedConstraintConsumer;
@@ -211,7 +212,11 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
             .collect()
     }
 
-    fn run_once(&self, witness: &PartitionWitness<F>, out_buffer: &mut GeneratedValues<F>) {
+    fn run_once(
+        &self,
+        witness: &PartitionWitness<F>,
+        out_buffer: &mut GeneratedValues<F>,
+    ) -> Result<()> {
         let extract_extension = |range: Range<usize>| -> CubicElement<F> {
             let t = CubicElement::from_range(self.row, range);
             t.get(witness)
@@ -229,7 +234,7 @@ impl<F: RichField + Extendable<D>, const D: usize> SimpleGenerator<F, D>
         let computed_output =
             (multiplicand_0 * multiplicand_1) * self.const_0 + addend * self.const_1;
 
-        output_target.set(&computed_output, out_buffer);
+        output_target.set(&computed_output, out_buffer)
     }
 
     fn serialize(&self, dst: &mut Vec<u8>, _common_data: &CommonCircuitData<F, D>) -> IoResult<()> {

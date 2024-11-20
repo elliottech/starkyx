@@ -520,17 +520,17 @@ where
         witness: &mut W,
         proof_tagret: &EmulatedStarkProofTarget<D>,
         proof: EmulatedStarkProof<L::Field, C, D>,
-    ) {
+    ) -> Result<()> {
         let EmulatedStarkProofTarget {
             main_proof,
             lookup_proof,
             global_values,
         } = proof_tagret;
 
-        set_air_proof_target(witness, main_proof, &proof.main_proof);
-        set_air_proof_target(witness, lookup_proof, &proof.lookup_proof);
+        set_air_proof_target(witness, main_proof, &proof.main_proof)?;
+        set_air_proof_target(witness, lookup_proof, &proof.lookup_proof)?;
 
-        witness.set_target_arr(global_values, &proof.global_values);
+        witness.set_target_arr(global_values, &proof.global_values)
     }
 }
 
@@ -627,8 +627,10 @@ mod tests {
 
         let mut pw = PartialWitness::new();
 
-        pw.set_target_arr(&public_input, &public);
-        stark.set_proof_target(&mut pw, &proof_target, proof);
+        pw.set_target_arr(&public_input, &public).unwrap();
+        stark
+            .set_proof_target(&mut pw, &proof_target, proof)
+            .unwrap();
 
         let rec_proof = data.prove(pw).unwrap();
         data.verify(rec_proof).unwrap();

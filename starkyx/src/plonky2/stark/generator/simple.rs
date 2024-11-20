@@ -1,5 +1,6 @@
 use core::fmt::Debug;
 
+use anyhow::Result;
 use plonky2::field::extension::Extendable;
 use plonky2::hash::hash_types::RichField;
 use plonky2::iop::generator::{GeneratedValues, SimpleGenerator};
@@ -76,7 +77,7 @@ where
         &self,
         witness: &PartitionWitness<L::Field>,
         out_buffer: &mut GeneratedValues<L::Field>,
-    ) {
+    ) -> Result<()> {
         let public_inputs = witness.get_targets(&self.public_input_targets);
 
         let proof = StarkyProver::<L::Field, C, D>::prove(
@@ -84,12 +85,13 @@ where
             &self.stark,
             &self.trace_generator,
             &public_inputs,
-        )
-        .unwrap();
+        )?;
 
-        set_stark_proof_target(out_buffer, &self.proof_target, &proof);
+        set_stark_proof_target(out_buffer, &self.proof_target, &proof)?;
 
         self.trace_generator.reset();
+
+        Ok(())
     }
 
     fn serialize(
